@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <link rel="icon" href="./img/asset-favicon.ico" />
+    <title>社交-岗位详情</title>
+    <link rel="stylesheet" type="text/css" href="./plugins/normalize-css/normalize.css" />
+    <link rel="stylesheet" type="text/css" href="./plugins/yui/cssgrids-min.css" />
+    <link rel="stylesheet" type="text/css" href="./plugins/sui/sui.min.css" />
+    <link rel="stylesheet" type="text/css" href="./plugins/sui/sui-append.min.css" />
+    <link rel="stylesheet" type="text/css" href="./plugins/font-awesome/css/font-awesome.min.css" />
+    <link rel="stylesheet" type="text/css" href="./css/widget-base.css" />
+    <link rel="stylesheet" type="text/css" href="./css/widget-head-foot.css" />
+    <link rel="stylesheet" type="text/css" href="./css/page-sj-recruit-detail.css" />
+    <link rel="stylesheet" href="./css/element.css">
+</head>
+
+<body>
+    <!--引用组件-->
+    <div class="wrapper">
+        <!--头部导航-->
+        <header>
+            <div class="sui-navbar">
+                <div class="navbar-inner">
+                    <a href="index-logined.html" class="sui-brand">
+                        <img src="./img/asset-logo-black.png" alt="社交" />
+                    </a>
+                    <ul class="sui-nav">
+                        <li>
+                            <a href="./headline-logined.html">头条</a>
+                        </li>
+                        <li>
+                            <a href="./qa-logined.html">问答</a>
+                        </li>
+                        <li>
+                            <a href="./activity-index.html">活动</a>
+                        </li>
+                        <li>
+                            <a href="./makeFriends-index.html">交友</a>
+                        </li>
+                        <li>
+                            <a href="./spit-index.html">吐槽</a>
+                        </li>
+                        <li class="active">
+                            <a href="./recruit-index.html">招聘</a>
+                        </li>
+                    </ul>
+                    <form class="sui-form sui-form pull-left">
+                        <input type="text" placeholder="输入关键词..." />
+                        <span class="btn-search fa fa-search"></span>
+                    </form>
+                    <div class="sui-nav pull-right info">
+                        <li>
+                            <a href="./other-notice.html" target="_blank" class="notice">通知</a>
+                        </li>
+                        <li class="hover">
+                            <span class="fa fa-plus "></span>
+                            <ul class="hoverinfo">
+                                <li>
+                                    <i class="fa fa-share-alt" aria-hidden="true"></i>
+                                    <a href="./headline-submit.html">去分享</a>
+                                </li>
+                                <li>
+                                    <i class="fa fa-question-circle" aria-hidden="true"></i>
+                                    <a href="./qa-submit.html" target="_blank">提问题</a>
+                                </li>
+                                <li>
+                                    <i class="fa fa-comments" aria-hidden="true"></i>
+                                    <a href="./spit-submit.html" target="_blank">去吐槽</a>
+                                </li>
+                                <li>
+                                    <i class="fa fa-heartbeat" aria-hidden="true"></i>
+                                    <a href="./makeFriends-submit.html" target="_blank">发约会</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="./person-homepage.html" target="_blank" class="homego">
+                                <img src="./img/widget-photo.png" alt="用户头像" />
+                            </a>
+                        </li>
+                    </div>
+                </div>
+            </div>
+        </header>
+    </div>
+    <!--两列布局-->
+    <div class="wrapper tag-item" id="app">
+        <div class="job-intro">
+            <div class="left-img">
+                <img :src="item.enterprise.logo" alt="" />
+            </div>
+            <div class="middle-intro">
+                <div class="name">{{item.jobname}} ∙ {{item.enterprise.name}}</div>
+                <div class="intro">{{item.salary}} / {{item.condition}} / {{item.education}} / {{item.type}}</div>
+                <div class="tag">
+                    <li v-for="(item, index) in recruitLabels" :key="index">{{item}}</li>
+                </div>
+            </div>
+            <div class="right-tool">
+                <button class="sui-btn btn-collect" @click='cancelCollectJob(item.id)' v-if='collected'>已收藏</button>
+                <button class="sui-btn btn-collect" @click='collectJob(item.id)' v-else>收藏职位</button>
+                <span>{{collect_count}}收藏</span>
+                <span>{{item.visits}}浏览</span>
+            </div>
+            <div style="clear:both"></div>
+        </div>
+        <div class="fl left-list ">
+            <div class="tit">
+                <span>职位描述</span>
+            </div>
+            <div class="content">
+                <p v-html="item.detailcontent"></p>
+            </div>
+            <div class="tit">
+                <span>职位要求</span>
+            </div>
+            <div class="content">
+                <p v-html="item.detailrequire"></p>
+
+            </div>
+            <div class="time">发布于{{calculatDurationDisplay(item.createtime)}}前</div>
+        </div>
+        <div class="fl right-tag">
+            <div class="company-job">
+                <div class="intro">
+                    <img :src="item.enterprise.logo" alt="" />
+                    <div class="title">{{item.enterprise.name}}</div>
+                    <div class="content">
+                        {{item.enterprise.summary}}
+                    </div>
+                </div>
+                <div class="tag">
+                    <li v-for="(item, index) in enterpriseLabels" :key="index">{{item}}</li>
+                </div>
+                <div class="btns">
+                    <a class="sui-btn btn-home" :href="'recruit-job.html?id=' + item.enterprise.id" target="_blank">企业主页</a>
+                    <a class="sui-btn btn-position" :href="'recruit-job.html?id=' + item.enterprise.id" target="_blank">{{item.enterprise.recruits.length}}个职位</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+        <div class="wrapper">
+            <div class="footer-bottom">
+                <div class="link">
+                    <dl>
+                        <dt>
+                            网站相关
+                        </dt>
+                        <dd>
+                            关于我们
+                        </dd>
+                        <dd>
+                            服务条款
+                        </dd>
+                        <dd>
+                            帮助中心
+                        </dd>
+                        <dd>
+                            编辑器语法
+                        </dd>
+                    </dl>
+                    <dl>
+                        <dt>
+                            常用链接
+                        </dt>
+                        <dd>
+                            传智播客
+                        </dd>
+                        <dd>
+                            传智论坛
+                        </dd>
+                    </dl>
+                    <dl>
+                        <dt>
+                            联系我们
+                        </dt>
+                        <dd>
+                            联系我们
+                        </dd>
+                        <dd>
+                            加入我们
+                        </dd>
+                        <dd>
+                            建议反馈
+                        </dd>
+                    </dl>
+                    <dl>
+                        <dt>
+                            关注我们
+                        </dt>
+                        <dd>
+                            微博
+                        </dd>
+                        <dd>
+                            twitter
+                        </dd>
+                    </dl>
+                    <div class="xuke">
+                        <h3>内容许可</h3>
+                        <p>除特别说明外，用户内容均采用知识共享署名-非商业性使用-禁止演绎4.0 国际许可协议 (CC BY-NC-ND 4.0) 进行许可</p>
+                        <p>本站由 传智研究院 提供更新服务</p>
+                    </div>
+                </div>
+                <p class="Copyright">Copyright &copy; 2017 传智问答社区 当前版本 0.0.1</p>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
+<script src="js/host.js"></script>
+<script src="js/vue.min.js"></script>
+<script src="js/element.js"></script>
+<script src="js/axios.min.js"></script>
+<script src="js/recruit_detail.js"></script>

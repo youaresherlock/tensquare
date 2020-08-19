@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="./img/asset-favicon.ico">
+    <title>社交-问答详情</title>
+
+    <link rel="stylesheet" type="text/css" href="./plugins/normalize-css/normalize.css" />
+    <link rel="stylesheet" type="text/css" href="./plugins/yui/cssgrids-min.css" />
+    <link rel="stylesheet" type="text/css" href="./plugins/sui/sui.min.css" />
+    <link rel="stylesheet" type="text/css" href="./plugins/sui/sui-append.min.css" />
+    <link rel="stylesheet" type="text/css" href="./plugins/font-awesome/css/font-awesome.min.css" />
+    <link rel="stylesheet" type="text/css" href="./css/widget-base.css" />
+    <link rel="stylesheet" type="text/css" href="./css/widget-head-foot.css" />
+    <link rel="stylesheet" type="text/css" href="./css/page-sj-headline-detail.css" />
+    <link rel="stylesheet" href="./css/element.css">
+    <style>
+        a {
+            cursor: pointer;
+        }
+
+        .parent {
+            padding: 10px;
+            background: #FBF9DF;
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrapper">
+        <!--引用组件-->
+        <!--头部导航-->
+        <header>
+
+
+        </header>
+
+
+    </div>
+    <!--两列布局-->
+    <div class="wrapper headline-content" id="app">
+        <div class="fl left-list">
+            <div class="problem-detail">
+                <!-- title area  -->
+                <div class="title-intro">
+                    <h2>{{articleDetail.title}}</h2>
+                    <div class="operate">
+                        <span class="fl author">{{articleDetail.user.username}}
+                            <span class="time">{{formatTime2(articleDetail.createtime)}}</span>
+                        </span>
+                        <a class="fr " @click='collect' v-if="collected">取消收藏</a>
+                        <a class="fr " @click='collect' v-else>收藏</a>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="content" v-html="articleDetail.content">
+                    </div>
+                </div>
+                <!-- remark area -->
+                <div class="answer-intro">
+                    <h4 class="answer-num">{{commentList.length}}条评论</h4>
+                    <div class="comment-box">
+                        <form class="comment-form sui-form form-inline">
+
+                            <img :src="avatar?avatar:'./img/widget-photo.jpg'" alt="">
+                            <div class="input-prepend input-append input-box">
+                                <input id="appendedPrependedInput" type="text" class="span2 input-fat real-box" placeholder="写下你的评论" v-model="comment">
+                                <span class="add-on" @click="publish_comment">提交</span>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="remark-list">
+                        <ul class="lists">
+                            <li class="item" v-for="(item, index) in commentList">
+                                <div class="fl img">
+                                    <img :src="item.user.avatar?item.user.avatar:'./img/widget-photo.jpg'" alt="">
+                                </div>
+                                <div class="fl text">
+                                    <p class="author">
+                                        <span class="name">{{item.user.username}}</span> 发布 &nbsp;&nbsp;
+                                        <span style="color:#ccc;font-size:12px">{{formatTime2(item.createtime)}}</span>
+                                    </p>
+                                    <p class="word">{{item.content}}</p>
+                                    <p class="tool">
+                                        <a class="callback" @click="replyId==item.id?replyId=-1:replyId=item.id">回复</a>&nbsp;
+                                        <span class="remark-num">{{item.subs.length}}条回复</span>
+                                    </p>
+                                </div>
+                                <div style="clear:both"></div>
+                                <div class="edit-box" v-show="replyId==item.id">
+                                    <form class="comment-form">
+                                        <textarea row="1" placeholder="请写下评论" v-model="sub_comment"></textarea>
+                                        <span type="submit" class="sui-btn submit-comment" @click="publish_sub_comment">提交评论</span>
+                                    </form>
+                                </div>
+                                <ul class="inner-list parent" v-if="item.subs.length!=0">
+                                    <li class="item" v-for="temp in item.subs">
+                                        <div class="fl img">
+                                            <img :src="temp.user.avatar?temp.user.avatar:'./img/widget-photo.jpg'" alt="">
+                                        </div>
+                                        <div class="fl text">
+                                            <p class="author">
+                                                <span class="name">{{temp.user.username}}</span> 发布
+                                                <span style="color:#ccc;font-size:12px">{{formatTime2(temp.createtime)}}</span>
+                                            </p>
+
+                                            <p class="word">{{temp.content}}</p>
+                                            <p class="tool">
+                                                <a class="callback" @click="replyId==temp.id?replyId=-1:replyId=temp.id">回复</a>&nbsp;
+                                                <span class="remark-num">{{temp.subs.length}}条回复</span>
+                                            </p>
+                                        </div>
+                                        <div style="clear:both"></div>
+                                        <div class="edit-box" v-show="replyId==temp.id">
+                                            <form class="comment-form">
+                                                <textarea row="1" placeholder="请写下评论内容" v-model="sub_comment"></textarea>
+                                                <span type="submit" class="sui-btn submit-comment" @click="publish_sub_comment">提交评论</span>
+                                            </form>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="fl right-tag">
+            <div class="focus similar-problem">
+                <div class="img-title">
+                    <div class="fl img">
+                        <img :src="articleDetail.user.avatar?articleDetail.user.avatar:'./img/widget-photo.jpg'" alt="">
+                    </div>
+                    <div class="fl btn-focus">
+                        <h4>{{articleDetail.user.username}}</h4>
+
+                        <button class="sui-btn btn-info btn-attention" v-if="focused" @click="unfocus(articleDetail.user.id)">取消关注</button>
+                        <button class="sui-btn btn-info btn-attention" v-else @click="focus(articleDetail.user.id)">关注</button>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <ul class="problem-list">
+                    <li class="list-item" v-for="item in articleDetail.user.articles">
+                        <p class="list-title">
+                            <a :href="'/headline-detail.html?id=' + item.id">{{item.title}}</a>
+                        </p>
+                    </li>
+                </ul>
+            </div>
+            <div class="similar-problem">
+                <h3 class="title">热门问题</h3>
+                <ul class="problem-list">
+                    <li class="list-item" v-for="item in problemList">
+                        <p class="list-title">
+                            <a :href="'/qa-detail.html?id='+item.id">{{item.title}}</a>
+                        </p>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+    <div class="footer">
+        <div class="wrapper">
+            <div class="footer-bottom">
+                <div class="link">
+                    <dl>
+                        <dt>网站相关</dt>
+                        <dd>关于我们</dd>
+                        <dd>服务条款</dd>
+                        <dd>帮助中心</dd>
+                        <dd>编辑器语法</dd>
+                    </dl>
+                    <dl>
+                        <dt>常用链接</dt>
+                        <dd>传智播客</dd>
+                        <dd>传智论坛</dd>
+                    </dl>
+                    <dl>
+                        <dt>联系我们</dt>
+                        <dd>联系我们</dd>
+                        <dd>加入我们</dd>
+                        <dd>建议反馈</dd>
+                    </dl>
+                    <dl>
+                        <dt>关注我们</dt>
+                        <dd>微博</dd>
+                        <dd>twitter</dd>
+                    </dl>
+
+                    <div class="xuke">
+                        <h3>内容许可</h3>
+                        <p>除特别说明外，用户内容均采用知识共享署名-非商业性使用-禁止演绎4.0 国际许可协议 (CC BY-NC-ND 4.0) 进行许可</p>
+                        <p>本站由 传智研究院 提供更新服务</p>
+                    </div>
+                </div>
+
+
+                <p class="Copyright">Copyright © 2017 传智问答社区 当前版本 0.0.1</p>
+            </div>
+        </div>
+
+    </div>
+
+
+
+
+
+    <script>
+
+    </script>
+</body>
+<script src="js/host.js"></script>
+<script src="js/vue.min.js"></script>
+<script src="js/element.js"></script>
+<script src="js/axios.min.js"></script>
+<script src="js/headline_detail.js"></script>

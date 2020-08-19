@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <title>正在登陆...</title>
+    <link rel="stylesheet" href="./css/element.css">
+    <script src="js/host.js"></script>
+    <script src="js/vue.min.js"></script>
+    <script src="js/element.js"></script>
+    <script src="js/axios.min.js"></script>
+</head>
+
+<body>
+    <div id="app">微信正在登陆...</div>
+</body>
+
+</html>
+<script>
+    var vm = new Vue({
+        el: "#app",
+        data: {
+        },
+        mounted() {
+            var code = get_query_string('code');
+            var url = host + 'weixin/user/?code=' + code
+            axios.get(url).then(response => {
+                this.setUser(response.data.token, response.data.username, response.data.avatar, response.data.id)
+                this.$message({
+                    message: '登录成功',
+                    type: "success"
+                })
+                setTimeout(function () {
+                    location.href = "/"
+                }, 2000)
+
+            }).catch(error => {
+                this.$message({
+                    message: error.response.data.message,
+                    type: "error"
+                })
+                setTimeout(function () {
+                    location.href = "/person-loginsign.html"
+                }, 2000)
+            });
+        },
+        methods: {
+            setUser(token, username, avatar, id) {
+                localStorage.id = id
+                localStorage.token = token;
+                localStorage.username = username;
+                localStorage.avatar = avatar;
+            }
+        },
+    });
+</script>

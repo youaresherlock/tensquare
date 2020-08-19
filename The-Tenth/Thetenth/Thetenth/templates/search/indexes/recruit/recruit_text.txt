@@ -1,0 +1,2 @@
+{{ object.jobname }}
+{{ object.city }}

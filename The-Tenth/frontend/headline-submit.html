@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="./img/asset-favicon.ico">
+    <title>社交-提交头条</title>
+
+    <link rel="stylesheet" type="text/css" href="./plugins/normalize-css/normalize.css" />
+    <link rel="stylesheet" type="text/css" href="./plugins/yui/cssgrids-min.css" />
+    <link rel="stylesheet" type="text/css" href="./plugins/sui/sui.min.css" />
+    <link rel="stylesheet" type="text/css" href="./plugins/sui/sui-append.min.css" />
+    <link rel="stylesheet" type="text/css" href="./plugins/font-awesome/css/font-awesome.min.css" />
+    <link rel="stylesheet" type="text/css" href="./css/widget-base.css" />
+    <link rel="stylesheet" type="text/css" href="./css/widget-head-foot.css" />
+    <link rel="stylesheet" type="text/css" href="./css/page-sj-headline-submit.css" />
+    <link rel="stylesheet" href="./css/element.css">
+
+</head>
+
+<body>
+    <div class="wrapper">
+        <!--引用组件-->
+        <!--头部导航-->
+        <header>
+        </header>
+    </div>
+    <!--两列布局-->
+    <div class="wrapper">
+        <div class="submit-headline">
+            <div class="left-box">
+                <h3 class="tit">
+                    <span>发布头条</span>
+                </h3>
+                <div class="sui-form form-horizontal">
+                    <div class="control-group">
+                        <div class="controls title-input">
+                            <input type="text" id="inputTitle" placeholder="标题：不超过30个字符">
+                        </div>
+                    </div>
+                    <a href="javascript:;" class="file" id="fakeA">点击选择一张文章封面
+                        <input type="file" id="articleImg">
+                    </a>
+                    <img src="./img/widget-banner01.png" alt="" id='thumbImg' style="max-width:70%;display:none;margin-left:8px;margin-bottom:20px;max-height:400px">
+                    <div class="control-group select">
+                        <span class="sui-dropdown dropdown-bordered select">
+                            <span class="dropdown-inner">
+                                <a id="drop12" role="button" data-toggle="dropdown" href="javascript:;" class="dropdown-toggle">
+                                    <input value="hz" name="city" type="hidden">
+                                    <i class="caret"></i>
+                                    <span>全部</span>
+                                </a>
+                                <ul id="menu12" role="menu" aria-labelledby="drop12" class="sui-dropdown-menu">
+                                </ul>
+                            </span>
+                        </span>
+                    </div>
+                    <div class="tags-area">
+                        <div class="input-tags">
+                            <input type="text" placeholder="标签" disabled class="input-xfat input-xxlarge" id="tags">
+                        </div>
+                        <div class="tags-box">
+                            <ul class="sui-tag tag-bordered" style="margin-bottom:0px">
+                            </ul>
+                        </div>
+                    </div>
+
+
+
+
+                    <div class="editor">
+                        <textarea name="editor1"></textarea>
+                    </div>
+                    <div class="submit" id="app">
+                        <button class="sui-btn btn-xlarge  btn-success" id="btnsubmit" @click="submit_headline">提交</button>
+                    </div>
+                </div>
+            </div>
+            <div class="right-tips">
+                <h3>发帖指南</h3>
+                <ul>
+                    <li>独立思考、自由探索</li>
+                    <li>发布的内容和互联网、编程开发、产品设计有关</li>
+                    <li>标题能准确描述的内容，不要发重复的内容</li>
+                    <li>客观投票，确保你看过这篇内容</li>
+                    <li>如果你遇到了具体的编程难题，请到 问答平台 提问</li>
+                    <li>保持友善，禁止任何形式的广告、SEO 推广</li>
+                    <li>遵循 用户服务条款</li>
+                </ul>
+            </div>
+        </div>
+
+
+    </div>
+    <div class="footer">
+        <div class="wrapper">
+            <div class="footer-bottom">
+                <div class="link">
+                    <dl>
+                        <dt>网站相关</dt>
+                        <dd>关于我们</dd>
+                        <dd>服务条款</dd>
+                        <dd>帮助中心</dd>
+                        <dd>编辑器语法</dd>
+                    </dl>
+                    <dl>
+                        <dt>常用链接</dt>
+                        <dd>传智播客</dd>
+                        <dd>传智论坛</dd>
+                    </dl>
+                    <dl>
+                        <dt>联系我们</dt>
+                        <dd>联系我们</dd>
+                        <dd>加入我们</dd>
+                        <dd>建议反馈</dd>
+                    </dl>
+                    <dl>
+                        <dt>关注我们</dt>
+                        <dd>微博</dd>
+                        <dd>twitter</dd>
+                    </dl>
+
+                    <div class="xuke">
+                        <h3>内容许可</h3>
+                        <p>除特别说明外，用户内容均采用知识共享署名-非商业性使用-禁止演绎4.0 国际许可协议 (CC BY-NC-ND 4.0) 进行许可</p>
+                        <p>本站由 传智研究院 提供更新服务</p>
+                    </div>
+                </div>
+
+
+                <p class="Copyright">Copyright © 2017 传智问答社区 当前版本 0.0.1</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+    </script>
+    <script src="./plugins/ckeditor/ckeditor.js"></script>
+    <script>
+        CKEDITOR.replace('editor1');
+    </script>
+</body>
+<script src="js/host.js"></script>
+<script src="js/vue.min.js"></script>
+<script src="js/element.js"></script>
+<script src="js/axios.min.js"></script>
+<script src="js/headline_submit.js"></script>
