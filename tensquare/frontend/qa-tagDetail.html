@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="./img/asset-favicon.ico">
+    <title>社交-标签详情</title>
+
+    <link rel="stylesheet" type="text/css" href="./plugins/normalize-css/normalize.css" />
+    <link rel="stylesheet" type="text/css" href="./plugins/yui/cssgrids-min.css" />
+    <link rel="stylesheet" type="text/css" href="./plugins/sui/sui.min.css" />
+    <link rel="stylesheet" type="text/css" href="./plugins/sui/sui-append.min.css" />
+    <link rel="stylesheet" type="text/css" href="./plugins/font-awesome/css/font-awesome.min.css" />
+    <link rel="stylesheet" type="text/css" href="./css/widget-base.css" />
+    <link rel="stylesheet" type="text/css" href="./css/widget-head-foot.css" />
+    <link rel="stylesheet" type="text/css" href="./css/page-sj-recruit-index.css" />
+    <link rel="stylesheet" type="text/css" href="./css/page-sj-recruit-area.css" />
+    <link rel="stylesheet" type="text/css" href="./css/page-sj-qa-tagDetail.css" />
+    <link rel="stylesheet" href="./css/element.css">
+</head>
+
+<body>
+    <div class="wrapper">
+        <!--引用组件-->
+        <!--头部导航-->
+        <header>
+        </header>
+    </div>
+    </div>
+    <!--两列布局-->
+    <div class="wrapper tag-item" id="app">
+        <div class="fl left-list">
+            <div class="tab-content">
+                <div id="index" class="tab-pane active">
+                    <div class="tag-intro">
+                        <h3 class="title">
+                            <img :src="tagDetail.label_icon?tagDetail.label_icon:'./img/widget-h5.png'" alt="" style="width:30px;height:30px"> {{tagDetail.label_name}}
+                            <a href="JavaScript:;" class="sui-btn btn-default guanzhu" v-if="tagDetail.has_focus" @click="focus_out">已关注</a>
+                            <a href="JavaScript:;" class="sui-btn btn-default guanzhu" v-else @click="focus_in">关注</a>
+                        </h3>
+                        <p class="words">{{tagDetail.desc}}
+                            <a :href="tagDetail.baike_url" id="goto">[百科]</a>
+                        </p>
+                    </div>
+                    <div class="tabtags-bottom-line">
+                        <ul class="sui-nav nav-tabs" id="tab-line">
+                            <li :class="tabindex==1?'active':''">
+                                <a href="javascript:;" @click="tabindex=1" data-toggle="tab">
+                                    <i class="fa fa-question-circle" aria-hidden="true"></i>问答</a>
+                            </li>
+                            <li :class="tabindex==2?'active':''">
+                                <a href="javascript:;" data-toggle="tab" @click="tabindex=2">
+                                    <i class="fa fa-file-text" aria-hidden="true"></i>文章</a>
+                            </li>
+                            <li :class="tabindex==3?'active':''">
+                                <a href="javascript:;" data-toggle="tab" @click="tabindex=3">
+                                    <i class="fa fa-black-tie" aria-hidden="true"></i>职位</a>
+                            </li>
+                            <li :class="tabindex==4?'active':''">
+                                <a href="javascript:;" data-toggle="tab" @click="tabindex=4">
+                                    <i class="fa fa-wikipedia-w" aria-hidden="true"></i>百科</a>
+                            </li>
+                        </ul>
+                        <div class="qa-list">
+                            <div class="tab-content" id="jump">
+                                <div id="qa" :class="tabindex==1?'tab-pane active':'tab-pane'">
+                                    <ul class="detail-list">
+                                        <li class="qa-item" v-for="item in tagDetail.questions">
+                                            <div class="fl record">
+                                                <div class="number">
+                                                    <div class="border useful">
+                                                        <p class="usenum">{{item.visits}}</p>
+                                                        <p>浏览</p>
+                                                    </div>
+                                                    <div class="border answer">
+                                                        <p class="ansnum">{{item.useful_count}}</p>
+                                                        <p>有用</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="fl info">
+                                                <div class="question">
+
+                                                    <p class="author" v-if="item.replyname">
+                                                        <span class="name">{{item.replyname}}</span>
+                                                        {{calculatDurationDisplay(item.replytime)}}前回答</p>
+                                                    <p class="author" v-else>
+                                                        <span class="name">还无人回答此问题</p>
+                                                    <p class="title" style="max-width: 500px;">
+                                                        <a :href="'./qa-detail.html?id='+item.id" target="_blank">{{item.title}}</a>
+                                                    </p>
+                                                    <ul class="sui-tag" v-for="temp in item.labels">
+                                                        <li>
+                                                            <a :href="'./qa-tagDetail.html?id='+item.id" target="_blank">{{temp}}</a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                            <div class="clearfix"></div>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div id="article" :class="tabindex==2?'tab-pane active':'tab-pane'">
+                                    <div class="article">
+
+                                        <ul class="detail-list">
+
+                                            <li class="article-item" v-for="item in tagDetail.articles">
+                                                <div class="fl info">
+                                                    <div class="number">
+                                                        <div class="border useful">
+                                                            <p class="usenum">{{item.collected_users.length}}</p>
+                                                            <p>收藏</p>
+                                                        </div>
+                                                        <div class="border answer">
+                                                            <p class="ansnum">{{item.visits}}</p>
+                                                            <p>浏览</p>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                                <div class="article">
+                                                    <a :href="'headline-detail.html?id='+item.id">
+                                                        <p class="title">{{item.title}}</p>
+                                                    </a>
+                                                    <p class="desc" v-html="item.content" v-if="item.content.length<100">
+                                                    </p>
+                                                    <p class="desc" v-html="item.content.substr(0,100) + '...'" v-else>
+                                                    </p>
+                                                    <p class="author">
+                                                        <span class="photo">
+                                                            <img :src="item.user.avatar?item.user.avatar:'./img/widget-photo.jpg'" alt="">
+                                                        </span>
+                                                        <span class="name">{{item.user.username}}</span>发表于
+                                                        {{formatTime2(item.createtime)}}
+                                                    </p>
+                                                </div>
+                                                <div class="clearfix"></div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div id="job" :class="tabindex==3?'tab-pane active':'tab-pane'">
+
+                                    <div class="job-position">
+                                        <div class="job-item" style="background-color:white;padding:10px;" v-for="(item, index) in labelRecruits" :key="index">
+                                            <div class="sui-row">
+                                                <div class="span3 detail">
+                                                    <p>
+                                                        <span class="name">
+                                                            <a :href="'recruit-detail.html?id=' + item.id" target="_blank"> {{item.jobname}}</a>
+                                                        </span>
+                                                        <span class="city">
+                                                            <i class="fa fa-map-marker"></i> {{item.city}}</span>
+                                                    </p>
+                                                    <p class="need">
+                                                        <span class="money">{{item.salary}}</span>/{{item.condition}}/{{item.education}}/{{item.type}}
+                                                    </p>
+                                                    <div class="tag">
+                                                        <li style="margin-top:5px" v-for="temp in item.labels.split(' ')">{{temp}}</li>
+                                                    </div>
+                                                </div>
+                                                <div class="span2 type">
+                                                    <p class="company">{{item.enterprise.name}}</p>
+                                                    <p>{{item.enterprise.labels.split(" ").join(" · ")}}</p>
+                                                </div>
+                                                <div class="span2 time">{{calculatDurationDisplay(item.createtime)}}前</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="baike" :class="tabindex==4?'tab-pane active':'tab-pane'">
+                                    <div class="baike">
+                                        <iframe :src="tagDetail.baike_url" frameborder="1" width="100%" height="600px"></iframe>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="php" class="tab-pane">
+                    php
+                </div>
+                <div id="js" class="tab-pane">
+                    Javascript
+                </div>
+                <div id="python" class="tab-pane">
+                    python
+                </div>
+                <div id="java" class="tab-pane">
+                    java
+                </div>
+            </div>
+        </div>
+        <div class="fl right-tag">
+            <div class="block-btn">
+                <p>今天，有什么好问题要和大家分享么?</p>
+                <a class="sui-btn btn-block btn-share" href="./qa-submit.html" target="_blank">发布分享</a>
+            </div>
+            <div class="hot-tags">
+                <div class="head">
+                    <h3 class="title">热门标签</h3>
+                </div>
+                <div class="tags">
+                    <ul class="sui-tag">
+                        <li v-for="(item,index) in hotTagList">
+                            <a :href="'./qa-tagDetail.html?id='+item.id" target="_blank">{{item.label_name}}</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+    <div class="footer">
+        <div class="wrapper">
+            <div class="footer-bottom">
+                <div class="link">
+                    <dl>
+                        <dt>网站相关</dt>
+                        <dd>关于我们</dd>
+                        <dd>服务条款</dd>
+                        <dd>帮助中心</dd>
+                        <dd>编辑器语法</dd>
+                    </dl>
+                    <dl>
+                        <dt>常用链接</dt>
+                        <dd>传智播客</dd>
+                        <dd>传智论坛</dd>
+                    </dl>
+                    <dl>
+                        <dt>联系我们</dt>
+                        <dd>联系我们</dd>
+                        <dd>加入我们</dd>
+                        <dd>建议反馈</dd>
+                    </dl>
+                    <dl>
+                        <dt>关注我们</dt>
+                        <dd>微博</dd>
+                        <dd>twitter</dd>
+                    </dl>
+
+                    <div class="xuke">
+                        <h3>内容许可</h3>
+                        <p>除特别说明外，用户内容均采用知识共享署名-非商业性使用-禁止演绎4.0 国际许可协议 (CC BY-NC-ND 4.0) 进行许可</p>
+                        <p>本站由 传智研究院 提供更新服务</p>
+                    </div>
+                </div>
+
+
+                <p class="Copyright">Copyright © 2017 传智问答社区 当前版本 0.0.1</p>
+            </div>
+        </div>
+
+    </div>
+</body>
+<script src="js/host.js"></script>
+<script src="js/vue.min.js"></script>
+<script src="js/element.js"></script>
+<script src="js/axios.min.js"></script>
+<script src="js/qa_tag_detail.js"></script>

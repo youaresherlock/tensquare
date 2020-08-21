@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="./img/asset-favicon.ico">
+    <title>社交-公司岗位</title>
+
+    <link rel="stylesheet" type="text/css" href="./plugins/normalize-css/normalize.css" />
+    <link rel="stylesheet" type="text/css" href="./plugins/yui/cssgrids-min.css" />
+    <link rel="stylesheet" type="text/css" href="./plugins/sui/sui.min.css" />
+    <link rel="stylesheet" type="text/css" href="./plugins/sui/sui-append.min.css" />
+    <link rel="stylesheet" type="text/css" href="./plugins/font-awesome/css/font-awesome.min.css" />
+    <link rel="stylesheet" type="text/css" href="./css/widget-base.css" />
+    <link rel="stylesheet" type="text/css" href="./css/widget-head-foot.css" />
+    <link rel="stylesheet" type="text/css" href="./css/page-sj-recruit-job.css" />
+    <link rel="stylesheet" href="./css/element.css">
+</head>
+
+<body>
+    <!--引用组件-->
+    <div class="wrapper">
+        <!--头部导航-->
+        <header>
+        </header>
+    </div>
+    <!--两列布局-->
+    <div class="wrapper tag-item" id="app">
+        <div class="job-intro">
+            <div style="width:100px;height:100px" class="left-img">
+                <img :src="item.logo" alt="" style="width:100px;height:100px"/>
+            </div>
+            <div class="middle-intro">
+                <div class="name">{{item.name}}</div>
+                <div class="intro">{{item.summary}}</div>
+                <div class="tag">
+                    <li style="margin-top:5px" v-for='temp in enterpriseLabels'>{{temp}}</li>
+                </div>
+                <p class="link">
+                    <a :href="item.url">{{item.url}}</a>
+                </p>
+            </div>
+            <div class="right-tool">
+                <button class="sui-btn btn-collect" @click='cancelCollectEnterprise(item.id)' v-if='collected'>已收藏</button>
+                <button class="sui-btn btn-collect" @click='collectEnterprise(item.id)' v-else>收藏公司</button>
+                <span>{{collect_count}}收藏</span>
+                <span>{{item.visits}}浏览</span>
+            </div>
+            <div style="clear:both"></div>
+        </div>
+        <div class="company-index">
+            <li :class="flag==1?'active':''" @click='flag=1'>
+                <span>企业主页</span>
+            </li>
+            <li :class="flag==2?'active':''" @click='flag=2'>
+                <span>招聘岗位</span>
+            </li>
+        </div>
+        <div class="fl left-list" v-show="flag==1">
+            <div class="tit">关于我们</div>
+            <div class="content" v-html="item.content">
+            </div>
+        </div>
+        <div class="fl left-list" v-show="flag==2">
+            <div class="job-item" v-for='recruit in recruits'>
+                <div class="sui-row">
+                    <div class="span3 detail">
+                        <p>
+                            <span class="name">
+                                <a :href="'recruit-detail.html?id=' + item.id" target="_blank"> {{recruit.jobname}}</a>
+                            </span>
+                            <span class="city">
+                                <i class="fa fa-map-marker"></i> {{recruit.city}}</span>
+                        </p>
+                        <p class="need">
+                            <span class="money">{{recruit.salary}}</span>/{{recruit.condition}}/{{recruit.education}}/{{recruit.type}}
+                        </p>
+                        <div class="tag">
+                            <li style="margin-top:5px" v-for="tag in recruit.labels.split(' ')">{{tag}}</li>
+                        </div>
+                    </div>
+                    <div class="span2 type">
+                        <p class="company">{{item.name}}</p>
+                        <p>{{enterpriseLabels[0]}} · {{enterpriseLabels[1]}} · {{enterpriseLabels[2]}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="fl right-tag">
+            <div class="tit">工作地点</div>
+            <div class="point">
+                <img src="./img/page-point.png" alt="" />
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+        <div class="wrapper">
+            <div class="footer-bottom">
+                <div class="link">
+                    <dl>
+                        <dt>网站相关</dt>
+                        <dd>关于我们</dd>
+                        <dd>服务条款</dd>
+                        <dd>帮助中心</dd>
+                        <dd>编辑器语法</dd>
+                    </dl>
+                    <dl>
+                        <dt>常用链接</dt>
+                        <dd>传智播客</dd>
+                        <dd>传智论坛</dd>
+                    </dl>
+                    <dl>
+                        <dt>联系我们</dt>
+                        <dd>联系我们</dd>
+                        <dd>加入我们</dd>
+                        <dd>建议反馈</dd>
+                    </dl>
+                    <dl>
+                        <dt>关注我们</dt>
+                        <dd>微博</dd>
+                        <dd>twitter</dd>
+                    </dl>
+
+                    <div class="xuke">
+                        <h3>内容许可</h3>
+                        <p>除特别说明外，用户内容均采用知识共享署名-非商业性使用-禁止演绎4.0 国际许可协议 (CC BY-NC-ND 4.0) 进行许可</p>
+                        <p>本站由 传智研究院 提供更新服务</p>
+                    </div>
+                </div>
+
+
+                <p class="Copyright">Copyright © 2017 传智问答社区 当前版本 0.0.1</p>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="js/host.js"></script>
+<script src="js/vue.min.js"></script>
+<script src="js/element.js"></script>
+<script src="js/axios.min.js"></script>
+<script src="js/recruit_job.js"></script>

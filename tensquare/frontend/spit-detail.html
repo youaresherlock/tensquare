@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="./img/asset-favicon.ico">
+    <title>社交-吐槽</title>
+
+    <link rel="stylesheet" type="text/css" href="./plugins/normalize-css/normalize.css" />
+    <link rel="stylesheet" type="text/css" href="./plugins/yui/cssgrids-min.css" />
+    <link rel="stylesheet" type="text/css" href="./plugins/sui/sui.min.css" />
+    <link rel="stylesheet" type="text/css" href="./plugins/sui/sui-append.min.css" />
+    <link rel="stylesheet" type="text/css" href="./plugins/font-awesome/css/font-awesome.min.css" />
+    <link rel="stylesheet" type="text/css" href="./css/widget-base.css" />
+    <link rel="stylesheet" type="text/css" href="./css/widget-head-foot.css" />
+    <link rel="stylesheet" type="text/css" href="./plugins/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="./css/page-sj-spit-detail.css" />
+    <link rel="stylesheet" href="./css/element.css">
+</head>
+
+<body>
+    <div class="wrapper">
+        <!--引用组件-->
+        <!--头部导航-->
+        <header>
+
+        </header>
+
+
+        <!--引用组件-->
+        <!--两列布局-->
+        <div class="wrapper tc-detail" id="app">
+            <div class="fl left-list">
+                <div class="tc-detail">
+                    <!-- 标题区 -->
+                    <div class="detail-tit">
+                        <div class="detail-author">
+                            <a href="javascript:;">匿名用户</a>&nbsp;&nbsp;于&nbsp;&nbsp;{{formatTime2(item.publishtime)}} &nbsp;&nbsp;发布
+                        </div>
+                        <div class="detail-content" v-html="item.content">
+
+                        </div>
+                        <div class="detail-tool">
+                            <ul>
+                                <li>
+                                    <span class="star" @click="thumbup(item.id)">
+                                        <i class="fa fa-thumbs-up" aria-hidden="true" v-if="item.hasthumbup"></i>
+                                        <i class="fa fa-thumbs-o-up" aria-hidden="true" v-else></i> {{item.thumbup}}
+                                    </span>
+                                </li>
+                                <!-- <li>
+                                    <a href="#" data-toggle="modal" data-target="#shareModal">
+                                        <i class="fa fa-share-alt" aria-hidden="true"></i> 44</a>
+                                </li> -->
+                                <li>
+                                    <a data-toggle="modal" data-target="#remarkModal" @click='show_txt="block"'>
+                                        <i class="fa fa-commenting-o" aria-hidden="true"></i> {{item.comment}}</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- 弹出框评论 -->
+                    <div class="modal" id="remarkModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" :style="'display:'+show_txt">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click='show_txt="none"'>
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                    <h4 class="modal-title" id="myModalLabel">发表评论</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="comment">
+                                        <span class="who">
+                                            匿名吐槽</span>:
+                                        <div v-html='item.content'></div>
+                                    </div>
+                                    <div class="form">
+                                        <textarea class="form-control" rows="5" placeholder="评论该吐槽" v-model='comment_txt'></textarea>
+                                        <div class="remark">
+                                            <button class="sui-btn btn-info" @click='publish_spit'>发表</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 评论区 -->
+                    <div class="comment-area">
+                        <div class="comment-tit">
+                            <span>评论</span>
+                        </div>
+                        <ul class="comment-list">
+                            <li v-for="(item, index) in commentList">
+                                <div class="item-photo">
+                                    <img :src="item.avatar?item.avatar:'./img/widget-widget-photo.png'" alt="" style="width:39px;height:39px" />
+                                </div>
+                                <div class="item-content">
+                                    <p class="author">
+                                        <a href="javascript:;">{{item.nickname}}</a> 评论于 {{formatTime2(item.publishtime)}}</p>
+                                    <p class="content" v-html="item.content"></p>
+                                </div>
+                                <div class="item-thumb" @click="thumbuplistitem(item.id,index)">
+                                    <div>
+                                        <i class="fa fa-thumbs-up" aria-hidden="true" v-if="item.hasthumbup"></i>
+                                        <i class="fa fa-thumbs-o-up" aria-hidden="true" v-else></i> {{item.thumbup}}</div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="fl right-tag">
+                <div class="block-btn">
+                    <p>来个匿名吐槽，发泄一下你心中的怒火吧！</p>
+                    <a class="sui-btn btn-block btn-share" href="./spit-submit.html" target="_blank">发吐槽</a>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+</body>
+<script src="js/host.js"></script>
+<script src="js/vue.min.js"></script>
+<script src="js/element.js"></script>
+<script src="js/axios.min.js"></script>
+<script src="js/spit_detail.js"></script>
